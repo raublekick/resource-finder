@@ -9,9 +9,4 @@ export default defineNuxtConfig({
     '@nuxtjs/leaflet'
   ],
   css: ['bootstrap/dist/css/bootstrap.min.css'],
-  runtimeConfig: {
-    public: {
-      mapboxKey: process.env.MAPBOX_KEY
-    }
-  }
 })
