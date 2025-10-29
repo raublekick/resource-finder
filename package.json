@@ -1,0 +1,27 @@
+{
+  "name": "resource-finder",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/eslint": "^1.10.0",
+    "@nuxt/icon": "^2.1.0",
+    "@vueuse/nuxt": "^14.0.0",
+    "bootstrap": "^5.3.8",
+    "eslint": "^9.38.0",
+    "nuxt": "^4.2.0",
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "^1.2.71",
+    "@types/bootstrap": "^5.2.10",
+    "@types/node": "^24.9.2"
+  }
+}
