@@ -5,7 +5,13 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@nuxt/icon',
-    '@vueuse/nuxt'
+    '@vueuse/nuxt',
+    '@nuxtjs/leaflet'
   ],
-  css: ['bootstrap/dist/css/bootstrap.min.css']
+  css: ['bootstrap/dist/css/bootstrap.min.css'],
+  runtimeConfig: {
+    public: {
+      mapboxKey: process.env.MAPBOX_KEY
+    }
+  }
 })

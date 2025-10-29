@@ -15,6 +15,8 @@ export interface Resource {
   socialMedia?: string;
   donations?: string;
   lastUpdated?: string;
+  // New: distance (miles) from user, computed client-side
+  distanceMi?: number;
 }
 
 // Helper derived type if you later want parsed numbers

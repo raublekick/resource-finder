@@ -1,7 +1,9 @@
 <template>
   <div class="card position-relative">
-    <Icon v-if="item.latLng" name="lucide:map-pin" class="position-absolute top-0 start-0 m-2 text-primary"
-      size="1.5em" />
+    <button v-if="item.latLng || (item.lat && item.lng)" class="btn btn-link position-absolute top-0 start-0 m-2 p-0"
+      aria-label="Center map on this location" title="Center map on this location" @click="handlePinClick">
+      <Icon name="lucide:map-pin" class="text-primary" size="1.5em" />
+    </button>
     <span v-if="item.lastUpdated" class="position-absolute top-0 end-0 m-2">
       <small class="text-muted">Last updated: {{ new Date(item.lastUpdated).toLocaleDateString() }}</small>
     </span>
@@ -13,13 +15,13 @@
 
 
       <div class="row">
-        <div class="col">
+        <div class="col-sm">
           <div><a :href="item.website" target="_blank" rel="noopener noreferrer">
               <Icon name="lucide:link" class="me-2" />{{ item.website }}
             </a></div>
           <p v-if="item.description" class="card-text">{{ item.description }}</p>
         </div>
-        <div class="col text-end">
+        <div class="col-sm text-end">
           <small v-if="item.address" class="text-muted">
             {{ item.address }}
           </small>
@@ -70,6 +72,10 @@ const props = defineProps<{
   item: Resource
 }>()
 
+const emit = defineEmits<{
+  (e: 'pin-click', coords: [number, number]): void
+}>()
+
 const tags = computed(() => {
   return props.item.tags ? props.item.tags.split(',').map((tag: string) => tag.trim()) : []
 })
@@ -105,6 +111,27 @@ const socialMedia = computed(() => {
   }
   return []
 })
+
+function handlePinClick() {
+  // Extract coordinates
+  let lat: number | undefined
+  let lng: number | undefined
+
+  if (props.item.lat && props.item.lng) {
+    lat = Number(props.item.lat)
+    lng = Number(props.item.lng)
+  } else if (props.item.latLng) {
+    const parts = props.item.latLng.split(',').map(p => p.trim())
+    if (parts.length === 2) {
+      lat = Number(parts[0])
+      lng = Number(parts[1])
+    }
+  }
+
+  if (lat !== undefined && lng !== undefined && Number.isFinite(lat) && Number.isFinite(lng)) {
+    emit('pin-click', [lat, lng])
+  }
+}
 </script>
 
 <style scoped>
