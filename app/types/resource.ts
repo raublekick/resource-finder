@@ -14,6 +14,7 @@ export interface Resource {
   email?: string;
   socialMedia?: string;
   donations?: string;
+  lastUpdated?: string;
 }
 
 // Helper derived type if you later want parsed numbers

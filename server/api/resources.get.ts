@@ -18,7 +18,8 @@ const columnMap: Record<string, string> = {
   'Website': 'website',
   'Email': 'email',
   'Social Media': 'socialMedia',
-  'Donations': 'donations'
+  'Donations': 'donations',
+  'Last Updated': 'lastUpdated',
 };
 
 export default defineEventHandler(async (event) => {
