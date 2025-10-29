@@ -1,9 +1,7 @@
 <template>
   <div>
     <LMap ref="map" :zoom="zoom" :center="center" :use-global-leaflet="false" style="height: 500px; width: 100%">
-      <LTileLayer url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
-        attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
-        layer-type="base" name="OpenStreetMap" />
+      <LTileLayer :url="url" :attribution="attribution" layer-type="base" name="OpenStreetMap" />
       <LMarker v-if="props.home" :draggable="false" :lat-lng="props.home">
         <LIcon :icon-url="icons[1]" :icon-size="iconSize" :icon-anchor="iconAnchor" :popup-anchor="popupAnchor" />
       </LMarker>
@@ -25,6 +23,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Resource } from '@/types/resource'
+const config = useRuntimeConfig()
 
 interface Props {
   items?: Resource[]
@@ -37,6 +36,14 @@ const props = withDefaults(defineProps<Props>(), {
   center: () => [33.4515, -112.07],
   home: null
 })
+
+const url = ref(
+  "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=" +
+  config.public.mapboxKey
+)
+const attribution = ref(
+  'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
+)
 
 const mapRef = ref()
 const homeMarkerRef = ref()
