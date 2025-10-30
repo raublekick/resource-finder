@@ -25,6 +25,7 @@ const columnMap: Record<string, string> = {
   'Last Updated': 'lastUpdated',
   'Start Date': 'startDate',
   'End Date': 'endDate',
+  'Direct Funding': 'directFunding',
 };
 
 const config = useRuntimeConfig();
@@ -53,7 +54,7 @@ export default defineEventHandler(async (event) => {
             resource[camelKey] = value
               ? value.split(',').map(coord => parseFloat(coord.trim())) as [number, number]
               : undefined;
-          } else if (camelKey === 'tags' || camelKey === 'donationItems' || camelKey === 'socialMedia') {
+          } else if (camelKey === 'tags' || camelKey === 'donationItems' || camelKey === 'socialMedia' || camelKey === 'directFunding') {
             resource[camelKey] = value ? value.split(',').map(item => item.trim()) : [];
           } else if (camelKey === 'lastUpdated' || camelKey === 'startDate' || camelKey === 'endDate') {
             resource[camelKey] = value ? new Date(value) : undefined;

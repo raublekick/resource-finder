@@ -15,6 +15,7 @@ export interface Resource {
   socialMedia?: Array<string>;
   donations?: string;
   donationItems?: Array<string>;
+  directFunding?: Array<string>;
   lastUpdated?: Date;
   startDate?: Date;
   endDate?: Date;

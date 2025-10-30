@@ -16,7 +16,7 @@
 
 
       <div class="row">
-        <div class="col-sm">
+        <div class="col-sm col-lg-9">
           <div><a :href="item.website" target="_blank" rel="noopener noreferrer">
               <Icon name="lucide:link" class="me-2" />{{ item.website }}
             </a></div>
@@ -28,6 +28,13 @@
             <div v-if="item.donationItems && item.donationItems.length" class="mt-1">
               <span v-for="donation in item.donationItems" :key="donation" class="badge bg-info text-dark me-1">
                 {{ donation }}
+              </span>
+            </div>
+            <div v-if="item.directFunding && item.directFunding.length" class="mt-1">
+              <span v-for="funding in item.directFunding" :key="funding" class="me-2">
+                <a :href="funding" target="_blank" rel="noopener noreferrer">
+                  <Icon :name="`lucide:${getDirectFundingIcon(funding)}`" class="text-success" />
+                </a>
               </span>
             </div>
           </div>
@@ -60,6 +67,9 @@
           </div>
 
 
+          <small v-if="item.hoursOfOperation" class="text-muted d-block">
+            <Icon name="lucide:clock" class="me-2" />{{ item.hoursOfOperation }}
+          </small>
           <small v-if="item.address" class="text-muted">
             {{ item.address }}
           </small>
@@ -115,6 +125,13 @@ function getSocialIcon(url: string): string {
   if (lower.includes('linkedin.com')) return 'linkedin'
   if (lower.includes('youtube.com')) return 'youtube'
   return 'link'
+}
+
+function getDirectFundingIcon(url: string): string {
+  const lower = url.toLowerCase()
+  if (lower.includes('patreon.com')) return 'patreon'
+  if (lower.includes('ko-fi.com')) return 'coffee'
+  return 'dollar-sign'
 }
 
 function handlePinClick() {
