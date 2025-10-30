@@ -9,7 +9,10 @@ export default defineNuxtConfig({
     '@nuxtjs/leaflet'
   ],
   pages: true, 
-  css: ['bootstrap/dist/css/bootstrap.min.css'],
+  css: [
+    'bootstrap/dist/css/bootstrap.min.css',
+    '@/assets/css/print.css'
+  ],
   runtimeConfig: {
     gdriveApiKey: '',
     sheetId: '',

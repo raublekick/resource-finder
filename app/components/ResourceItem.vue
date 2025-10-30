@@ -1,5 +1,5 @@
 <template>
-  <div class="card position-relative">
+  <div class="card resource-item position-relative">
     <button v-if="item.latLng || (item.lat && item.lng)" class="btn btn-link position-absolute top-0 start-0 m-2 p-0"
       aria-label="Center map on this location" title="Center map on this location" @click="handlePinClick">
       <Icon name="lucide:map-pin" class="text-primary" size="1.5em" />
