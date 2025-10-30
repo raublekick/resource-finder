@@ -67,10 +67,22 @@ const filteredResources = computed(() => {
   return filtered
 })
 
+const MAP_ANCHOR_ID = 'map-section'
 const centerMap = (coords: Array<number>) => {
   if (coords.length === 2) {
     center.value = coords as [number, number]
     mapKey.value++
+  }
+  if (import.meta.client) {
+    // Smooth scroll to map anchor
+    const el = document.getElementById(MAP_ANCHOR_ID)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      // Update URL hash without full navigation
+      history.replaceState(null, '', `#${MAP_ANCHOR_ID}`)
+      // Focus for keyboard accessibility (map wrapper has tabindex="-1")
+      el.focus()
+    }
   }
 }
 
@@ -138,8 +150,9 @@ watch(coords, (val) => {
 </script>
 
 <template>
-  <div class="container">
-    <div class="alert alert-info d-flex align-items-center">
+  <div>
+
+    <div class="alert alert-info d-flex align-items-center d-none d-lg-flex">
       <Icon size="1.5em" name="lucide-info" class="me-2" />
       <span class="me-2">
         This data is sourced from community volunteers and feedback from
@@ -149,7 +162,6 @@ watch(coords, (val) => {
         Add a Resource
       </NuxtLink>
     </div>
-
     <p v-if="geoLoading" class="small text-muted">
       Allow location access to see your position and distance to resources.
     </p>
@@ -162,6 +174,17 @@ watch(coords, (val) => {
     </p>
 
     <MapView :key="mapKey" :items="filteredResources" :center="center" :home="userLocation" class="mb-2" />
+
+    <div class="alert alert-info d-flex align-items-center d-lg-none">
+      <Icon size="1.5em" name="lucide-info" class="me-2" />
+      <span class="me-2">
+        This data is sourced from community volunteers and feedback from
+        users. Do you know of a resource that we don't?
+      </span>
+      <NuxtLink to="#" class="btn btn-primary ms-auto">
+        Add a Resource
+      </NuxtLink>
+    </div>
 
     <div class="mb-3">
       <label for="search-input" class="visually-hidden">Search resources</label>

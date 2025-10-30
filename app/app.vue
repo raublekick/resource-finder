@@ -4,7 +4,10 @@
 
 <template>
   <NavBar />
-  <NuxtPage />
+  <div class="container">
+
+    <NuxtPage />
+  </div>
   <footer class="mt-5 mb-3 text-center text-muted">
     <small>
       &copy; 2025 Phoenix SNAP Benefits Assistance Resource Finder. Data provided by community members.
