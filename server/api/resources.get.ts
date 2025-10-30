@@ -1,3 +1,5 @@
+import { Resource } from "~/types/resource";
+
 interface GoogleSheetsResponse {
   values?: string[][];
 }
@@ -19,23 +21,43 @@ const columnMap: Record<string, string> = {
   'Email': 'email',
   'Social Media': 'socialMedia',
   'Donations': 'donations',
+  'Donation Items': 'donationItems',
   'Last Updated': 'lastUpdated',
+  'Start Date': 'startDate',
+  'End Date': 'endDate',
 };
 
 export default defineEventHandler(async (event) => {
   const data = await getSheet();
   const rows = data.values;
-  const resources = [];
+  const resources: Resource[] = [];
 
   if (rows) {
     const columns = rows.shift(); // Remove header row
 
     if (columns) {
       for (const row of rows) {
-        const resource: { [key: string]: string } = {};
+        const resource: Resource = {} as Resource;
+
         columns.forEach((col, index) => {
           const camelKey = columnMap[col] || col;
-          resource[camelKey] = row[index] || "";
+          const value = row[index];
+          
+          // Convert values based on Resource type requirements
+          if (camelKey === 'lat' || camelKey === 'lng') {
+            resource[camelKey] = value ? parseFloat(value) : undefined;
+          }
+          else if (camelKey === 'latLng') {
+            resource[camelKey] = value
+              ? value.split(',').map(coord => parseFloat(coord.trim())) as [number, number]
+              : undefined;
+          } else if (camelKey === 'tags' || camelKey === 'donationItems' || camelKey === 'socialMedia') {
+            resource[camelKey] = value ? value.split(',').map(item => item.trim()) : [];
+          } else if (camelKey === 'lastUpdated' || camelKey === 'startDate' || camelKey === 'endDate') {
+            resource[camelKey] = value ? new Date(value) : undefined;
+          } else {
+            resource[camelKey] = value || undefined;
+          }
         });
         resources.push(resource);
       }

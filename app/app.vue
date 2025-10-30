@@ -4,7 +4,7 @@ import { useGeolocation } from '@/composables/geolocation'
 
 const resources = useState<Resource[]>('resources')
 const center = ref<[number, number]>([33.4515, -112.07])
-const mapKey = ref(0) // Add this to force map updates
+const mapKey = ref(0)
 const userLocation = useState<[number, number] | null>('userLocation', () => null)
 const searchQuery = ref('')
 const selectedCategories = ref<string[]>([])
@@ -70,7 +70,7 @@ const filteredResources = computed(() => {
 const centerMap = (coords: Array<number>) => {
   if (coords.length === 2) {
     center.value = coords as [number, number]
-    mapKey.value++ // Force map to update
+    mapKey.value++
   }
 }
 
@@ -86,7 +86,7 @@ const toggleCategory = (category: string) => {
 // Haversine distance (miles)
 function haversineMiles(aLat: number, aLng: number, bLat: number, bLng: number): number {
   const toRad = (x: number) => x * Math.PI / 180
-  const R = 3958.8 // Earth radius in miles
+  const R = 3958.8
   const dLat = toRad(bLat - aLat)
   const dLng = toRad(bLng - aLng)
   const lat1 = toRad(aLat)
@@ -103,25 +103,23 @@ function haversineMiles(aLat: number, aLng: number, bLat: number, bLng: number):
   return +(R * c).toFixed(2)
 }
 
-function extractCoord(field: string | undefined, latLng: string | undefined, index: 0 | 1): number {
-  if (field && field.trim() !== '') return Number(field)
-  if (latLng) {
-    const parts = latLng.split(',').map(p => p.trim())
-    const part = parts[index]
-    if (part) return Number(part)
-  }
-  return NaN
-}
-
 function recomputeDistancesMiles(userLat: number, userLng: number) {
   resources.value = resources.value.map(r => {
-    const latNum = extractCoord(r.lat, r.latLng, 0)
-    const lngNum = extractCoord(r.lng, r.latLng, 1)
-    if (Number.isFinite(latNum) && Number.isFinite(lngNum)) {
+    // Use typed lat/lng or latLng tuple directly
+    let latNum = r.lat
+    let lngNum = r.lng
+
+    if (latNum === undefined && r.latLng) {
+      latNum = r.latLng[0]
+      lngNum = r.latLng[1]
+    }
+
+    if (latNum !== undefined && lngNum !== undefined && Number.isFinite(latNum) && Number.isFinite(lngNum)) {
       return { ...r, distanceMi: haversineMiles(userLat, userLng, latNum, lngNum) }
     }
     return { ...r, distanceMi: undefined }
   })
+
   resources.value.sort((a, b) => {
     if (a.distanceMi == null && b.distanceMi == null) return 0
     if (a.distanceMi == null) return 1
@@ -161,7 +159,7 @@ watch(coords, (val) => {
       Location permission denied.
     </p>
     <p v-else-if="coords" class="small text-success">
-      Location acquired.
+      Location acquired: Lat: {{ coords[0].toFixed(4) }}, Lng: {{ coords[1].toFixed(4) }}
     </p>
 
     <MapView :key="mapKey" :items="filteredResources" :center="center" :home="userLocation" class="mb-2" />
@@ -199,5 +197,11 @@ watch(coords, (val) => {
     </div>
 
     <ResourcesList :items="filteredResources" @pin-click="centerMap" />
+
+    <footer class="mt-5 mb-3 text-center text-muted">
+      <small>
+        &copy; 2025 Phoenix SNAP Benefits Assistance Resource Finder. Data provided by community members.
+      </small>
+    </footer>
   </div>
 </template>
