@@ -27,6 +27,8 @@ const columnMap: Record<string, string> = {
   'End Date': 'endDate',
 };
 
+const config = useRuntimeConfig();
+
 export default defineEventHandler(async (event) => {
   const data = await getSheet();
   const rows = data.values;
@@ -70,11 +72,11 @@ export default defineEventHandler(async (event) => {
 const getSheet = async (): Promise<GoogleSheetsResponse> => {
   const sheetUrl =
     "https://sheets.googleapis.com/v4/spreadsheets/" +
-    process.env.SHEET_ID +
+    config.sheetId +
     "/values/" +
-    process.env.TAB_NAME +
+    config.tabName +
     "?alt=json&key=" +
-    process.env.GDRIVE_API_KEY;
+    config.gdriveApiKey;
   const data = await $fetch<GoogleSheetsResponse>(sheetUrl);
   return data;
 };
