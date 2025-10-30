@@ -9,7 +9,10 @@
       <div id="navbarSupportedContent" class="collapse navbar-collapse">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <NuxtLink class="nav-link" :class="{ active: $route.path === '/' }" to="/">Home</NuxtLink>
+          </li>
+          <li class="nav-item">
+            <NuxtLink class="nav-link" :class="{ active: $route.path === '/about' }" to="/about">About</NuxtLink>
           </li>
         </ul>
         <form class="d-flex" role="search">

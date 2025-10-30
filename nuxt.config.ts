@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxtjs/leaflet'
   ],
+  pages: true, 
   css: ['bootstrap/dist/css/bootstrap.min.css'],
   runtimeConfig: {
     gdriveApiKey: '',
