@@ -4,14 +4,16 @@
 
     <ClientOnly>
       <LMap v-show="itemsWithCoords.length" id="map-section" ref="mapRef" :zoom="zoom" :center="center"
-        :use-global-leaflet="false" style="height: 500px; width: 100%" :options="leafletOptions">
+        :use-global-leaflet="false" style="height: 500px; width: 100%" :options="leafletOptions"
+        @ready="handleMapReady">
         <LTileLayer :url="url" :attribution="attribution" layer-type="base" name="OpenStreetMap" />
         <LMarker v-if="props.home" :lat-lng="props.home" :draggable="false" :title="'Your location'">
           <LIcon :icon-url="icons[1]" :icon-size="iconSize" :icon-anchor="iconAnchor" :popup-anchor="popupAnchor" />
           <LPopup>You are here</LPopup>
         </LMarker>
-        <template v-for="(item, idx) in itemsWithCoords" :key="idx">
-          <LMarker :lat-lng="{ lat: item.lat!, lng: item.lng! }" :draggable="false" :title="item.name"
+        <template>
+          <LMarker v-for="(item, idx) in itemsWithCoords" ref="markersRef" :key="idx"
+            :lat-lng="{ lat: item.lat!, lng: item.lng! }" :draggable="false" :title="item.name"
             :class="['resource-marker', item === selectedItem ? 'selected-marker' : '']"
             @click="handleMarkerClick(item)">
             <LIcon :icon-url="item === selectedItem ? icons[2] : icons[0]" :icon-size="iconSize"
@@ -60,8 +62,8 @@ const attribution = ref(
   'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
 )
 
-const mapRef = ref()
-const markersRef = ref<any[]>([])
+const mapRef = ref(null)
+const markersRef = ref(null)
 const selectedItem = ref<Resource | null>(null)
 const loading = ref(true)
 
@@ -94,24 +96,50 @@ function handleMarkerClick(item: Resource) {
   selectedItem.value = item
 }
 
+function handleMapReady() {
+  //console.log('Map : ' + mapRef.value)
+  // if (markersRef.value && selectedItem.value) {
+  //   // get the value of the markers
+  //   // const markerObjects = markersRef.value.map((ref: any) => {
+  //   //   console.log('Marker ref:', ref)
+  //   //   return ref.mapObject
+  //   // })
+  //   markersRef.value.forEach((marker: any) => {
+  //     console.log('Marker object:', marker)
+  //     if (marker && marker.latLng.lat === selectedItem.value.lat && marker.latLng.lng === selectedItem.value.lng) {
+  //       marker.openPopup()
+  //     }
+  //   })
+  // }
+}
+
 // Watch for center changes
 watch(() => props.center, (newCenter) => {
-  if (mapRef.value?.mapObject) {
-    mapRef.value.mapObject.setView(newCenter, defaultZoom)
-
-    // Open popup for marker at the new center
-    nextTick(() => {
-      if (markersRef.value) {
-        const markerObjects = markersRef.value.map((ref: any) => ref.mapObject)
-        markerObjects.forEach((marker: any) => {
-          if (marker && marker._latlng.lat === newCenter[0] && marker._latlng.lng === newCenter[1]) {
-            marker.openPopup()
-          }
-        })
-      }
-    })
+  // get the item that matches the new center
+  const matchingItem = itemsWithCoords.value.find(item =>
+    item.lat === newCenter![0] && item.lng === newCenter![1]
+  )
+  if (matchingItem) {
+    selectedItem.value = matchingItem
+    zoom.value = 20
+  } else {
+    selectedItem.value = null
   }
-})
+
+  // console.log('Markers ref:', markersRef.value)
+  // // Open popup for marker at the new center
+  // nextTick(() => {
+  //   if (markersRef.value) {
+  //     const markerObjects = markersRef.value.map((ref: any) => ref.mapObject)
+  //     markerObjects.forEach((marker: any) => {
+  //       if (marker && marker._latlng.lat === newCenter[0] && marker._latlng.lng === newCenter[1]) {
+  //         marker.openPopup()
+  //       }
+  //     })
+  //   }
+  // })
+
+}, { immediate: true })
 
 watch(itemsWithCoords, (list) => {
   if (!list.length) {
