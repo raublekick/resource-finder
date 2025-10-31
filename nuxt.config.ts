@@ -18,7 +18,8 @@ export default defineNuxtConfig({
     sheetId: '',
     tabName: '',
     public: {
-      mapboxKey: ''
+      mapboxKey: '',
+      addResourceUrl: ''
     }
   }
 })

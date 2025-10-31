@@ -9,6 +9,7 @@ const userLocation = useState<[number, number] | null>('userLocation', () => nul
 const searchQuery = ref('')
 const selectedCategories = ref<string[]>([])
 const maxDistance = ref<number | null>(null)
+const config = useRuntimeConfig()
 
 await callOnce(async () => {
   const { data } = await useFetch<Resource[]>('/api/resources')
@@ -158,7 +159,7 @@ watch(coords, (val) => {
         This data is sourced from community volunteers and feedback from
         users. Do you know of a resource that we don't?
       </span>
-      <NuxtLink to="#" class="btn btn-primary ms-auto">
+      <NuxtLink target="_blank" :to="config.public.addResourceUrl" class="btn btn-primary ms-auto">
         Add a Resource
       </NuxtLink>
     </div>
@@ -181,7 +182,7 @@ watch(coords, (val) => {
         This data is sourced from community volunteers and feedback from
         users. Do you know of a resource that we don't?
       </span>
-      <NuxtLink to="#" class="btn btn-primary ms-auto">
+      <NuxtLink target="_blank" :to="config.public.addResourceUrl" class="btn btn-primary ms-auto">
         Add a Resource
       </NuxtLink>
     </div>
