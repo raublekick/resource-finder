@@ -23,7 +23,12 @@
                 <h6 class="mb-1">
                   <a :href="item.website" target="_blank" rel="noopener noreferrer">{{ item.name }}</a>
                 </h6>
-                <div v-if="item.address" class="small">{{ item.address }}</div>
+                <div v-if="item.address" class="small">
+                  <a :href="`https://maps.google.com/?saddr=Current+Location&daddr=${encodeURIComponent(item.address)}`"
+                    target="_blank" rel="noopener noreferrer">
+                    {{ item.address }}
+                  </a> (click for directions)
+                </div>
                 <div v-if="item.category" class="text-muted small">{{ item.category }}</div>
                 <div v-if="item.distanceMi != null" class="small">
                   {{ item.distanceMi.toFixed(1) }} mi away

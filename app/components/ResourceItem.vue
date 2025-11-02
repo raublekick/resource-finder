@@ -71,7 +71,11 @@
             <Icon name="lucide:clock" class="me-2" />{{ item.hoursOfOperation }}
           </small>
           <small v-if="item.address" class="text-muted">
-            {{ item.address }}
+            <Icon name="lucide:map-pin" class="me-2" />
+            <a :href="`https://maps.google.com/?saddr=Current+Location&daddr=${encodeURIComponent(item.address)}`"
+              target="_blank" rel="noopener noreferrer">
+              {{ item.address }}
+            </a>
           </small>
           <small v-if="item.phone" class="text-muted d-block">
             <Icon name="lucide:phone" class="me-2" /><a :href="`tel:${item.phone}`">{{ item.phone }}</a>
