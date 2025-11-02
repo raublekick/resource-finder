@@ -8,7 +8,7 @@ export interface Resource {
   lat?: number;
   lng?: number;
   address?: string;
-  hoursOfOperation?: string;
+  hoursOfOperation?: Array<string>;
   phone?: string;
   website?: string;
   email?: string;

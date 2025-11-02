@@ -68,7 +68,10 @@
 
 
           <small v-if="item.hoursOfOperation" class="text-muted d-block">
-            <Icon name="lucide:clock" class="me-2" />{{ item.hoursOfOperation }}
+            <Icon name="lucide:clock" class="me-2" />
+            <span v-for="(hour, index) in item.hoursOfOperation" :key="index">
+              {{ hour }}<br v-if="index < item.hoursOfOperation.length - 1">
+            </span>
           </small>
           <small v-if="item.address" class="text-muted">
             <Icon name="lucide:map-pin" class="me-2" />

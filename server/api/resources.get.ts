@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
             resource[camelKey] = value
               ? value.split(',').map(coord => parseFloat(coord.trim())) as [number, number]
               : undefined;
-          } else if (camelKey === 'tags' || camelKey === 'donationItems' || camelKey === 'socialMedia' || camelKey === 'directFunding') {
+          } else if (camelKey === 'tags' || camelKey === 'donationItems' || camelKey === 'socialMedia' || camelKey === 'directFunding' || camelKey === 'hoursOfOperation') {
             resource[camelKey] = value ? value.split(',').map(item => item.trim()) : [];
           } else if (camelKey === 'lastUpdated' || camelKey === 'startDate' || camelKey === 'endDate') {
             resource[camelKey] = value ? new Date(value) : undefined;
