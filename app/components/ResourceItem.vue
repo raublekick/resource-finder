@@ -5,7 +5,7 @@
       <Icon name="lucide:map-pin" class="text-primary" size="1.5em" />
     </button>
     <span v-if="item.lastUpdated" class="position-absolute top-0 end-0 m-2">
-      <small class="text-muted">Last updated: {{ new Date(item.lastUpdated).toLocaleDateString() }}</small>
+      <small class="text-muted">Last updated: {{ useDateFormat(item.lastUpdated, 'MM/DD/YYYY').value }}</small>
     </span>
     <div class="card-body ps-5 pe-4">
       <h4 class="card-title">{{ item.name }}</h4>
@@ -40,20 +40,28 @@
           </div>
         </div>
         <div class="col-sm text-end">
-          <div v-if="item.startDate && item.endDate">
+          <div v-if="item.startDate && item.endDate && item.startDate !== item.endDate">
             <div class="mb-2">
               <Icon name="lucide:calendar" class="me-2 text-info" />
               <small class="text-info">
-                Available from {{ new Date(item.startDate).toLocaleDateString() }} to
-                {{ new Date(item.endDate).toLocaleDateString() }}
+                Available from {{ useDateFormat(item.startDate, 'MM/DD/YYYY').value }} to
+                {{ useDateFormat(item.endDate, 'MM/DD/YYYY').value }}
               </small>
             </div>
           </div>
-          <div v-else-if="item.startDate">
+          <div v-else-if="item.startDate && !item.endDate">
             <div class="mb-2">
               <Icon name="lucide:calendar" class="me-2 text-info" />
               <small class="text-info">
-                Available starting {{ new Date(item.startDate).toLocaleDateString() }}
+                Available starting {{ useDateFormat(item.startDate, 'MM/DD/YYYY').value }}
+              </small>
+            </div>
+          </div>
+          <div v-else-if="item.startDate && item.endDate && item.startDate === item.endDate">
+            <div class="mb-2">
+              <Icon name="lucide:calendar" class="me-2 text-info" />
+              <small class="text-info">
+                Available on {{ useDateFormat(item.startDate, 'MM/DD/YYYY').value }}
               </small>
             </div>
           </div>
@@ -61,13 +69,13 @@
             <div class="mb-2">
               <Icon name="lucide:calendar" class="me-2 text-info" />
               <small class="text-info">
-                Available until {{ new Date(item.endDate).toLocaleDateString() }}
+                Available until {{ useDateFormat(item.endDate, 'MM/DD/YYYY').value }}
               </small>
             </div>
           </div>
 
 
-          <small v-if="item.hoursOfOperation" class="text-muted d-block">
+          <small v-if="item.hoursOfOperation?.length" class="text-muted d-block">
             <Icon name="lucide:clock" class="me-2" />
             <span v-for="(hour, index) in item.hoursOfOperation" :key="index">
               {{ hour }}<br v-if="index < item.hoursOfOperation.length - 1">
